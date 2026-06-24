@@ -1,43 +1,22 @@
-"""
-Bonus Exercise: Combined Embeddings + LLM API
-Objective: Generate embeddings, find most similar prompt, and send to LLM
-"""
-
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import json
-from typing import Tuple, Dict, Any
 
 class EmbeddingLLMPipeline:
-    def __init__(self, model_name: str = 'all-MiniLM-L6-v2'):
-        """Initialize the pipeline with embedding model"""
+    def __init__(self, model_name='all-MiniLM-L6-v2'):
         print(f"Loading Sentence Transformer model: {model_name}")
         self.model = SentenceTransformer(model_name)
         print("✓ Model loaded successfully\n")
 
-    def find_best_matching_prompt(self, prompts: list[str],
-                                   reference: str) -> Tuple[str, float, int]:
-        """
-        Find the most similar prompt to reference
-
-        Args:
-            prompts: List of candidate prompts
-            reference: Reference prompt to compare against
-
-        Returns:
-            Tuple of (best_prompt, similarity_score, index)
-        """
+    def find_best_matching_prompt(self, prompts, reference):
         all_texts = prompts + [reference]
         embeddings = self.model.encode(all_texts, show_progress_bar=False)
 
         reference_embedding = embeddings[-1]
         prompt_embeddings = embeddings[:-1]
 
-        similarities = cosine_similarity(
-            [reference_embedding],
-            prompt_embeddings
-        )[0]
+        similarities = cosine_similarity([reference_embedding], prompt_embeddings)[0]
 
         best_idx = np.argmax(similarities)
         best_prompt = prompts[best_idx]
@@ -45,18 +24,7 @@ class EmbeddingLLMPipeline:
 
         return best_prompt, best_similarity, best_idx
 
-    def process_pipeline(self, prompts: list[str],
-                        reference: str) -> Dict[str, Any]:
-        """
-        Run the complete pipeline
-
-        Args:
-            prompts: List of candidate prompts
-            reference: Reference prompt
-
-        Returns:
-            Dictionary with pipeline results
-        """
+    def process_pipeline(self, prompts, reference):
         print("=" * 70)
         print("STEP 1: Generating Embeddings")
         print("=" * 70)
@@ -69,18 +37,15 @@ class EmbeddingLLMPipeline:
 
         for i, text in enumerate(all_texts):
             label = "[REFERENCE]" if i == len(all_texts) - 1 else f"[Candidate {i+1}]"
-            first_5_dims = embeddings[i][:5]
             print(f"{label} {text[:40]:<40}")
-            print(f"  First 5 dims: {first_5_dims}")
+            print(f"  First 5 dims: {embeddings[i][:5]}")
 
         print()
         print("=" * 70)
         print("STEP 2: Finding Best Matching Prompt")
         print("=" * 70)
 
-        best_prompt, similarity, idx = self.find_best_matching_prompt(
-            prompts, reference
-        )
+        best_prompt, similarity, idx = self.find_best_matching_prompt(prompts, reference)
 
         print(f"✓ Best match found!")
         print(f"  Prompt: '{best_prompt}'")
@@ -91,10 +56,7 @@ class EmbeddingLLMPipeline:
         print("Similarity with all candidates:")
         reference_embedding = embeddings[-1]
         prompt_embeddings = embeddings[:-1]
-        similarities = cosine_similarity(
-            [reference_embedding],
-            prompt_embeddings
-        )[0]
+        similarities = cosine_similarity([reference_embedding], prompt_embeddings)[0]
 
         for i, (prompt, sim) in enumerate(zip(prompts, similarities)):
             marker = "★ BEST" if i == idx else "  "
@@ -127,10 +89,8 @@ def main():
     print("=" * 70)
     print()
 
-    # Initialize pipeline
     pipeline = EmbeddingLLMPipeline()
 
-    # Define prompts
     reference_prompt = "How does machine learning improve software development?"
 
     candidate_prompts = [
@@ -140,10 +100,8 @@ def main():
         "How do we build better recommendation systems?"
     ]
 
-    # Run pipeline
     results = pipeline.process_pipeline(candidate_prompts, reference_prompt)
 
-    # Display results
     print("=" * 70)
     print("FINAL RESULTS")
     print("=" * 70)

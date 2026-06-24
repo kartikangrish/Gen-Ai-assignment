@@ -1,47 +1,18 @@
-"""
-Exercise 2: Calling LLM via API
-Objective: Learn how to interact with an LLM using an API endpoint
-"""
-
 import requests
 import json
-from typing import Dict, Any
 
 class LLMAPIClient:
     def __init__(self, api_endpoint: str, api_key: str = None):
-        """
-        Initialize LLM API client
-
-        Args:
-            api_endpoint: The LLM API endpoint URL
-            api_key: Optional API key for authentication
-        """
         self.api_endpoint = api_endpoint
         self.api_key = api_key
-        self.headers = {
-            "Content-Type": "application/json"
-        }
+        self.headers = {"Content-Type": "application/json"}
         if api_key:
             self.headers["Authorization"] = f"Bearer {api_key}"
 
-    def send_query(self, user_input: str, temperature: float = 0.7,
-                   system_prompt: str = None) -> Dict[str, Any]:
-        """
-        Send a query to the LLM API
-
-        Args:
-            user_input: User's query
-            temperature: Sampling temperature (0-1)
-            system_prompt: Optional system prompt
-
-        Returns:
-            Full API response as dictionary
-        """
+    def send_query(self, user_input: str, temperature: float = 0.7, system_prompt: str = None):
         payload = {
             "model": "claude-3-5-sonnet-20241022",
-            "messages": [
-                {"role": "user", "content": user_input}
-            ],
+            "messages": [{"role": "user", "content": user_input}],
             "temperature": temperature,
             "max_tokens": 1024
         }
@@ -69,16 +40,7 @@ class LLMAPIClient:
             print(f"❌ API Error: {str(e)}")
             return {"error": str(e)}
 
-    def extract_assistant_reply(self, response: Dict[str, Any]) -> str:
-        """
-        Extract assistant reply from API response
-
-        Args:
-            response: Full API response
-
-        Returns:
-            Assistant's reply text
-        """
+    def extract_assistant_reply(self, response):
         if "error" in response:
             return f"Error: {response['error']}"
 
@@ -96,13 +58,11 @@ def main():
     print("=" * 70)
     print()
 
-    # Note: Replace with actual API endpoint and key
     API_ENDPOINT = "https://api.anthropic.com/v1/messages"
-    API_KEY = "your-api-key-here"  # Replace with actual key
+    API_KEY = "your-api-key-here"
 
     client = LLMAPIClient(API_ENDPOINT, API_KEY)
 
-    # Query 1
     query1 = "What is the importance of embeddings in machine learning?"
     print("Query 1:")
     print(f"'{query1}'")
@@ -115,7 +75,6 @@ def main():
     print("\n✓ Assistant Reply 1:")
     print(assistant_reply1)
 
-    # Query 2 with different parameters
     query2 = "Explain similarity scoring in NLP with a simple example"
     print("\n" + "=" * 70)
     print("Query 2 (Lower temperature = more deterministic):")
@@ -129,7 +88,6 @@ def main():
     print("\n✓ Assistant Reply 2:")
     print(assistant_reply2)
 
-    # Comparison
     print("\n" + "=" * 70)
     print("Comparison:")
     print("=" * 70)
