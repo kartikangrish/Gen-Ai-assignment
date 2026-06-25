@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GenAI Knowledge Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 GenAI Knowledge Assistant</h1>
+            <p>Ask questions about GenAI, embeddings, RAG, and more</p>
+        </div>
+
+        <div class="chat-container">
+            <form id="questionForm">
+                <div class="input-group">
+                    <input
+                        type="text"
+                        id="questionInput"
+                        placeholder="Ask a question about GenAI..."
+                        required
+                    >
+                    <button type="submit">Ask</button>
+                </div>
+            </form>
+
+            <div id="loading" class="loading hidden">
+                <p>Loading response...</p>
+            </div>
+
+            <div id="response" class="response hidden">
+                <div class="question-section">
+                    <h3>Your Question</h3>
+                    <p id="displayQuestion"></p>
+                </div>
+
+                <div class="context-section">
+                    <h3>Retrieved Context from ChromaDB</h3>
+                    <div id="contextList"></div>
+                </div>
+
+                <div class="answer-section">
+                    <h3>Assistant Response</h3>
+                    <p id="assistantAnswer"></p>
+                </div>
+
+                <div class="error-section hidden">
+                    <p id="errorMessage"></p>
+                </div>
+            </div>
+
+            <div id="error" class="error hidden">
+                <p id="errorText"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questionForm = document.getElementById('questionForm');
+        const questionInput = document.getElementById('questionInput');
+        const loading = document.getElementById('loading');
+        const response = document.getElementById('response');
+        const error = document.getElementById('error');
+
+        questionForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const question = questionInput.value.trim();
+            if (!question) return;
+
+            loading.classList.remove('hidden');
+            response.classList.add('hidden');
+            error.classList.add('hidden');
+
+            try {
+                const res = await fetch('/query', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({question})
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    throw new Error(data.error || 'An error occurred');
+                }
+
+                document.getElementById('displayQuestion').textContent = data.question;
+
+                const contextList = document.getElementById('contextList');
+                contextList.innerHTML = '';
+                data.retrieved_context.forEach((doc, index) => {
+                    const distance = data.distances[index].toFixed(4);
+                    const item = document.createElement('div');
+                    item.className = 'context-item';
+                    item.innerHTML = `
+                        <p><strong>Document ${index + 1}</strong></p>
+                        <p>${doc}</p>
+                        <p class="distance"><em>Similarity Distance: ${distance}</em></p>
+                    `;
+                    contextList.appendChild(item);
+                });
+
+                document.getElementById('assistantAnswer').textContent = data.assistant_response;
+
+                loading.classList.add('hidden');
+                response.classList.remove('hidden');
+                questionInput.value = '';
+
+            } catch (err) {
+                loading.classList.add('hidden');
+                error.classList.remove('hidden');
+                document.getElementById('errorText').textContent = `Error: ${err.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
