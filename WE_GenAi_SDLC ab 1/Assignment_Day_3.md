@@ -1,6 +1,6 @@
 # Assignment Day 3 - Custom Copilot Skill
 
-Use this document to capture the prompts, screenshots, skill files, test output, and observations for the Day 3 custom skill lab.
+
 
 ## 1. Lab Goal
 
