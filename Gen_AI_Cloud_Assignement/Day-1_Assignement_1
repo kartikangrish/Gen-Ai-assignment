@@ -1,4 +1,9 @@
 1. Explore the diff. models provided in the MS Foundry Model Catalogue
+    ![alt text](<Screenshot 2026-07-08 161629.png>)
+
 2. Deploy GPT-5 Model & test using the Playground feature
+        ![alt text](<Screenshot 2026-07-08 161629-1.png>)
 3. Delete the Model from the deployed Models
+        ![alt text](<Screenshot 2026-07-08 162209.png>)
 4. Delete the resource group by logging into the Azure Portal
+        ![alt text](<Screenshot 2026-07-08 162324.png>)
