@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 2 Azure Agents</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <main class="shell">
+        <section class="intro">
+            <p class="eyebrow">Azure AI Foundry Assignment</p>
+            <h1>Day 2 Agents Workspace</h1>
+            <p>Deploy GPT-5, support policy questions, and ground rent answers with Azure AI Search.</p>
+        </section>
+
+        <section class="agents" aria-label="Agent tools">
+            <article class="panel">
+                <h2>Chat App</h2>
+                <textarea id="chat-message" placeholder="Ask the GPT-5 chat client anything..."></textarea>
+                <button data-agent="chat">Send</button>
+                <pre id="chat-output">Ready.</pre>
+            </article>
+
+            <article class="panel">
+                <h2>Policy Helper Agent</h2>
+                <textarea id="policy-question" placeholder="Example: What is the password change policy?"></textarea>
+                <button data-agent="policy">Ask Policy Helper</button>
+                <pre id="policy-output">Ready.</pre>
+            </article>
+
+            <article class="panel wide">
+                <h2>House Rent Prediction Agent</h2>
+                <textarea id="rent-query" placeholder="Example: Estimate rent for a 2 BHK semi-furnished flat in Pune around 750 sqft."></textarea>
+                <button data-agent="rent">Search Dataset</button>
+                <pre id="rent-output">Ready.</pre>
+            </article>
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
