@@ -10,4 +10,4 @@
         ![House Rent Prediction Agent Screenshot](<Screenshot 2026-07-09 160424.png>)
         ![House Rent Dataset Screenshot](<Screenshot 2026-07-09 160527.png>)
         ![House Rent Search Screenshot](<Screenshot 2026-07-09 161326.png>)
-        ![House Rent Response Screenshot](<Screenshot 2026-07-09 161309.png>)
+        ![House Rent Response Screenshot](<Screenshot 2026-07-09 161237.png>)
